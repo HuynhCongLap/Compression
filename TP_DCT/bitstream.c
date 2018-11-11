@@ -105,14 +105,12 @@ void flush_bitstream(struct bitstream *b)
           return;
       else
       {
-          if(fputs(b->buffer,b->fichier) == EOF)
-          {
-    		    EXCEPTION_LANCE(Exception_fichier_ouverture);
-          }
-          else
-          {
-            b->buffer = 0;
-          }
+          for(int i=0; i < b->nb_bits_dans_buffer; i++)
+            if(fputc(prend_bit(b->buffer,NB_BITS-1-i), b->fichier) == EOF)
+              EXCEPTION_LANCE(Exception_fichier_ecriture);
+
+              b->buffer = 0;
+              b->nb_bits_dans_buffer = 0;
       }
     }
 }
@@ -165,7 +163,7 @@ void put_bit(struct bitstream *b, Booleen bit)
   {
     if(b->nb_bits_dans_buffer == NB_BITS)
       flush_bitstream(b);
-      pose_bit(b->buffer,NB_BITS-b->nb_bits_dans_buffer -1,bit);
+      pose_bit(b->buffer,NB_BITS - b->nb_bits_dans_buffer - 1,bit);
       b->nb_bits_dans_buffer++;
   }
 }
@@ -202,28 +200,24 @@ Booleen get_bit(struct bitstream *b)
   {
     if(b->nb_bits_dans_buffer == 0)
     {
-      if(fgetc)
+      int value = fgetc(b->fichier);
+      if(value == EOF)
+        EXCEPTION_LANCE(Exception_fichier_lecture);
+      else
+        return value;
     }
     else
     {
       return prend_bit(b->buffer,NB_BITS-1);
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-return 0 ; /* pour enlever un warning du compilateur */
 }
+
+
+
+
+
+
 
 /*
  * Ne modifiez pas la fonctions suivantes
