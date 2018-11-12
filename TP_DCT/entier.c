@@ -41,20 +41,40 @@ static char *prefixes[] = { "00", "010", "011", "1000", "1001", "1010", "1011",
 
 void put_entier(struct bitstream *b, unsigned int f)
 {
-	unsigned int nb_bits_utile = nb_bits_utile(f);
-	prefixes[nb_bits_utile];
 
-	unsigned long diff = f - pow2(nb_bits_utile-1);
-	if (nb_bits_utile > 1)
-	char* suffixe = new char[nb_bits_utile-1];
+	if(f > 32767)
+		EXIT;
+	unsigned int nb_bits = nb_bits_utile(f);
+	fprintf( stderr, "f= *%d* ",f);
+	fprintf( stderr, "nb= *%d* ",nb_bits);
+	unsigned long diff = f - pow2(nb_bits-1);
+	fprintf( stderr, "diff= *%d*",diff);
+	if (nb_bits > 1){
+		char* suffixe = (char*) malloc(nb_bits);
+		for(unsigned int i=0; i< nb_bits-1 ; i++ )
+		{
+			if(prend_bit(diff,nb_bits - i -2))
+				suffixe[i] = '1';
+			else
+		  	suffixe[i] = '0';
+		}
+		suffixe[nb_bits-1] ='\0' ;
+		char* str = (char*) malloc( strlen(prefixes[nb_bits]) + strlen(suffixe) +1);
+		strcpy(str,prefixes[nb_bits]);
+		strcat(str,suffixe);
+		str[strlen(str)]='\0';
+		put_bit_string(b,str);
 
-	int i = 0;
-	while(suffixe != '\0')
-	{
-		suffixe[i] = prend_bit(diff,nb_bits_utile-1-i);
-		i++;
+		fprintf( stderr, " String : %s\n",str);
+		free(str);
+		free(suffixe);
+	}
+	else{
+		put_bit_string(b,prefixes[nb_bits]);
+		fprintf( stderr, " String : %s\n",prefixes[nb_bits]);
 	}
 
+	printf("\n");
 }
 
 /*
@@ -68,36 +88,6 @@ void put_entier(struct bitstream *b, unsigned int f)
 
 unsigned int get_entier(struct bitstream *b)
 {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 return 0 ; /* pour enlever un warning du compilateur */
 }
