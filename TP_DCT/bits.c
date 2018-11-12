@@ -49,9 +49,9 @@ void put_bit_string(struct bitstream *b, const char *bits)
   while(bits[i] != '\0')
   {
     if(bits[i] == '0')
-      put_bit(b,0);
-    if(bits[i] == '1')
-      put_bit(b,1);
+      put_bit(b,Faux);
+    else
+      put_bit(b,Vrai);
       i++;
   }
 

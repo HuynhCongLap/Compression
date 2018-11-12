@@ -60,6 +60,7 @@ struct bitstream *open_bitstream(const char *fichier, const char* mode)
   	ALLOUER(b,1);
 
     b->ecriture = mode[0] != 'r';
+
   	if (strcmp(fichier,"-")==0){
   		if (b->ecriture){
   			b->fichier = stdout;
@@ -95,25 +96,22 @@ struct bitstream *open_bitstream(const char *fichier, const char* mode)
  *         "Exception_fichier_ecriture"
  */
 
-void flush_bitstream(struct bitstream *b)
-{
-  if(!b->ecriture)
-    return;
-  else
-    {
-      if (!b->nb_bits_dans_buffer)
-          return;
-      else
-      {
-          for(int i=0; i < b->nb_bits_dans_buffer; i++)
-            if(fputc(prend_bit(b->buffer,NB_BITS-1-i), b->fichier) == EOF)
-              EXCEPTION_LANCE(Exception_fichier_ecriture);
+ void flush_bitstream(struct bitstream *b)
+ {
+ 	if (b->fichier != NULL){
+ 		if (b->ecriture){
+ 			if (b->nb_bits_dans_buffer!=0){
 
-              b->buffer = 0;
-              b->nb_bits_dans_buffer = 0;
-      }
-    }
-}
+ 				fputc(b->buffer,b->fichier);
+ 			}
+ 			b->buffer='/0';
+ 			b->nb_bits_dans_buffer=0;
+ 		}
+ 	}
+ 	else{
+ 		EXCEPTION_LANCE(Exception_fichier_ecriture);
+ 	}
+ }
 
 /*
  * Avant de fermer le fichier ouvert en écriture on copie le buffer
@@ -124,17 +122,18 @@ void flush_bitstream(struct bitstream *b)
  *         Exception_fichier_fermeture
  */
 
-void close_bitstream(struct bitstream *b)
-{
-  if (b->fichier != NULL)
-  {
-  	flush_bitstream(b);
-  	fclose(b->fichier);
-  	free(b);
-  }
-  else
-    EXCEPTION_LANCE(Exception_fichier_fermeture);
-}
+ void close_bitstream(struct bitstream *b)
+ {
+     int closeSignal;
+ 	if (b->fichier != NULL){
+         flush_bitstream(b);
+ 		closeSignal=fclose(b->fichier);
+     }
+     if (closeSignal!=1)
+         free(b);
+     else
+ 		EXCEPTION_LANCE(Exception_fichier_fermeture);
+ }
 
 /*
  * Cette fonction ajoute le "bit" dans le buffer.
@@ -153,20 +152,19 @@ void close_bitstream(struct bitstream *b)
  *         Exception_fichier_ecriture_dans_fichier_ouvert_en_lecture
  */
 
-void put_bit(struct bitstream *b, Booleen bit)
-{
-  if(!b->ecriture)
-  {
-    EXCEPTION_LANCE(Exception_fichier_ecriture_dans_fichier_ouvert_en_lecture);
-  }
-  else
-  {
-    if(b->nb_bits_dans_buffer == NB_BITS)
-      flush_bitstream(b);
-      pose_bit(b->buffer,NB_BITS - b->nb_bits_dans_buffer - 1,bit);
-      b->nb_bits_dans_buffer++;
-  }
-}
+ void put_bit(struct bitstream *b, Booleen bit)
+ {
+ //    fprintf( stderr, "%d",bit);
+ 	if (b->ecriture){
+ 		if (b->nb_bits_dans_buffer==NB_BITS)
+ 			flush_bitstream(b);
+ 		b->nb_bits_dans_buffer++;
+ 		b->buffer = pose_bit(b->buffer,NB_BITS - b-> nb_bits_dans_buffer ,bit);
+ 	}
+ 	else
+ 		EXCEPTION_LANCE(Exception_fichier_ecriture_dans_fichier_ouvert_en_lecture);
+ }
+
 
 
 /*
@@ -192,26 +190,20 @@ void put_bit(struct bitstream *b, Booleen bit)
  *         Exception_fichier_lecture_dans_fichier_ouvert_en_ecriture
  */
 
-Booleen get_bit(struct bitstream *b)
-{
-  if(b->ecriture)
-    EXCEPTION_LANCE(Exception_fichier_lecture_dans_fichier_ouvert_en_ecriture);
-  else
-  {
-    if(b->nb_bits_dans_buffer == 0)
-    {
-      int value = fgetc(b->fichier);
-      if(value == EOF)
-        EXCEPTION_LANCE(Exception_fichier_lecture);
-      else
-        return value;
-    }
-    else
-    {
-      return prend_bit(b->buffer,NB_BITS-1);
-    }
-  }
-}
+ Booleen get_bit(struct bitstream *b)
+ {
+ 	if (b->ecriture)
+ 		EXCEPTION_LANCE(Exception_fichier_lecture_dans_fichier_ouvert_en_ecriture);
+     if (b->nb_bits_dans_buffer == 0){
+         int value = fgetc(b->fichier);
+         if (value == EOF)
+             EXCEPTION_LANCE(Exception_fichier_lecture);
+         b->buffer = value;
+         b->nb_bits_dans_buffer=8;
+     }
+     b->nb_bits_dans_buffer--;
+     return prend_bit(b->buffer,b->nb_bits_dans_buffer);
+ }
 
 
 

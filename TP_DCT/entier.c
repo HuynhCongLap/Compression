@@ -12,7 +12,7 @@
  *
  * Le nombre est codé par la concaténation du PREFIXE et SUFFIXE
  * Le suffixe est en fait le nombre entier sauf le premier bit a 1
- * 
+ *
  * Nombre de bits |    PRÉFIXE     | nombres codés | SUFFIXE
  *       0        |       00       |      0        |
  *     	 1        |       010      |  1 (pas 0)    |
@@ -41,16 +41,19 @@ static char *prefixes[] = { "00", "010", "011", "1000", "1001", "1010", "1011",
 
 void put_entier(struct bitstream *b, unsigned int f)
 {
+	unsigned int nb_bits_utile = nb_bits_utile(f);
+	prefixes[nb_bits_utile];
 
+	unsigned long diff = f - pow2(nb_bits_utile-1);
+	if (nb_bits_utile > 1)
+	char* suffixe = new char[nb_bits_utile-1];
 
-
-
-
-
-
-
-
-
+	int i = 0;
+	while(suffixe != '\0')
+	{
+		suffixe[i] = prend_bit(diff,nb_bits_utile-1-i);
+		i++;
+	}
 
 }
 
