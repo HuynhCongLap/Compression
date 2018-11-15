@@ -30,16 +30,12 @@ struct shannon_fano
  */
 struct shannon_fano* open_shannon_fano()
 {
-
-
-
-
-
-
-
-
-
-return 0 ; /* pour enlever un warning du compilateur */
+    struct shannon_fano *s;
+    ALLOUER(s,1);
+    s->nb_evenements = 1;
+    s->evenements[0].valeur = VALEUR_ESCAPE;
+    s->evenements[0].nb_occurrences = 1; 
+    return s ; /* pour enlever un warning du compilateur */
 }
 
 /*
