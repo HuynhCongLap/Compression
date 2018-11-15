@@ -41,14 +41,11 @@ static char *prefixes[] = { "00", "010", "011", "1000", "1001", "1010", "1011",
 
 void put_entier(struct bitstream *b, unsigned int f)
 {
-
 	if(f > 32767)
 		EXIT;
 	unsigned int nb_bits = nb_bits_utile(f);
-	fprintf( stderr, "f= *%d* ",f);
-	fprintf( stderr, "nb= *%d* ",nb_bits);
 	unsigned long diff = f - pow2(nb_bits-1);
-	fprintf( stderr, "diff= *%d*",diff);
+
 	if (nb_bits > 1){
 		char* suffixe = (char*) malloc(nb_bits);
 		for(unsigned int i=0; i< nb_bits-1 ; i++ )
@@ -65,16 +62,13 @@ void put_entier(struct bitstream *b, unsigned int f)
 		str[strlen(str)]='\0';
 		put_bit_string(b,str);
 
-		fprintf( stderr, " String : %s\n",str);
 		free(str);
 		free(suffixe);
 	}
 	else{
 		put_bit_string(b,prefixes[nb_bits]);
-		fprintf( stderr, " String : %s\n",prefixes[nb_bits]);
 	}
 
-	printf("\n");
 }
 
 /*
@@ -89,7 +83,37 @@ void put_entier(struct bitstream *b, unsigned int f)
 unsigned int get_entier(struct bitstream *b)
 {
 
-return 0 ; /* pour enlever un warning du compilateur */
+	char* comp = (char*) malloc(7);
+	for(int i=0; i<7; i++)
+	{
+		comp[i] = '\0';
+	}
+  unsigned int value = -1;
+
+	for(unsigned int i=0; i<6 ; i++){
+		if(get_bit(b))
+			comp[i]='1';
+		else
+			comp[i]='0';
+		for(int j=0; j<16; j++)
+			{
+				if(strcmp(prefixes[j],comp) == 0){
+							 value = j;
+							 break;
+					}
+			}
+			if(value != -1){
+					break;
+			}
+	}
+	free(comp);
+	if(value < 2)
+		return value;
+	else
+	{
+		unsigned int val = get_bits(b,value-1) + pow2(value-1);
+		return val;
+	} /* pour enlever un warning du compilateur */
 }
 
 /*
@@ -109,25 +133,21 @@ return 0 ; /* pour enlever un warning du compilateur */
 
 void put_entier_signe(struct bitstream *b, int i)
 {
-
-
-
-
-
-
-
-
-
-
+		if(i >= 0)
+		{
+			put_bit(b,Faux);
+			put_entier(b,i);
+		}
+		else
+		{
+			put_bit(b,Vrai);
+			put_entier(b,-i-1);
+		}
 }
 /*
  *
  */
 int get_entier_signe(struct bitstream *b)
 {
-
-
-
-
-return 0 ; /* pour enlever un warning du compilateur */
+	return  get_bit(b) ? -get_entier(b) -1 : get_entier(b) ; /* pour enlever un warning du compilateur */
 }
