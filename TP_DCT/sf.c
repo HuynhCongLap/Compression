@@ -31,7 +31,6 @@ struct shannon_fano
  */
 struct shannon_fano* open_shannon_fano()
 {
-    fprintf( stderr, "Open\n");
     struct shannon_fano *s;
     ALLOUER(s,1);
     s->nb_evenements = 1;
@@ -45,7 +44,6 @@ struct shannon_fano* open_shannon_fano()
  */
 void close_shannon_fano(struct shannon_fano *sf)
 {
-    fprintf( stderr, "Close\n");
     free(sf);
 }
 
@@ -125,7 +123,7 @@ static int trouve_separation(const struct shannon_fano *sf
 static void encode_position(struct bitstream *bs,struct shannon_fano *sf,
 		     int position)
 {
-    fprintf( stderr, "encode: ");
+
     int pos_min = 0;
     int pos_max = sf->nb_evenements-1;
 
@@ -134,18 +132,18 @@ static void encode_position(struct bitstream *bs,struct shannon_fano *sf,
       int pos = trouve_separation(sf, pos_min, pos_max);
       if(pos == -1){
           put_bit(bs, Faux);
-          fprintf( stderr, "0");
+
           return;
         }
       if(position > pos){
         pos_min = pos + 1;
         put_bit(bs, Vrai);
-        fprintf( stderr, "1");
+
       }
       else{
         pos_max = pos;
         put_bit(bs, Faux);
-        fprintf( stderr, "0");
+
       }
     }
 }
@@ -181,7 +179,6 @@ static void incremente_et_ordonne(struct shannon_fano *sf, int position)
 void put_entier_shannon_fano(struct bitstream *bs
 			     ,struct shannon_fano *sf, int evenement)
 {
-    fprintf( stderr, "\nSo Day vao: %d\n",evenement );
     int position = trouve_position(sf,evenement);
     encode_position(bs,sf,position);
 
@@ -201,24 +198,35 @@ void put_entier_shannon_fano(struct bitstream *bs
 static int decode_position(struct bitstream *bs,struct shannon_fano *sf)
 {
 
+/*  while(pos_min != pos_max)
+  {
+    Booleen bit = get_bit(bs);
+    int pos = trouve_separation(sf, pos_min, pos_max);
+    if(pos == -1){
+        put_bit(bs, Faux);
+        fprintf( stderr, "0");
+        return;
+      }
+    if(bit){
+      pos_min = pos + 1;
+    }
+    else{
+      pos_max = pos;
+    }
+
+    if(pos_min == pos_max)
+    {
+      // escape
+      // return so la
+    }
+    else
+    {
+        return sf->evenements[pos_min];
+    }
+  } */
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-return 0 ; /* pour enlever un warning du compilateur */
+  return 0 ; /* pour enlever un warning du compilateur */
 }
 
 /*
@@ -229,21 +237,29 @@ return 0 ; /* pour enlever un warning du compilateur */
  */
 int get_entier_shannon_fano(struct bitstream *bs, struct shannon_fano *sf)
 {
+  /*  int valeur = -1;
+    if(sf->nb_evenements == 1){
+        int valeur = get_bits(bs,sizeof(int)*8);
+        sf->nb_evenements++;
+        sf->evenements[1].occurrence = 1;
+        sf->evenements[1].valeur = valeur;
+        return valeur;
+      }
+    else{
+        valeur = decode_position(bs,sf);
+        for(int i=0; i<sf->evenement; i++)
+        {
+          if(sf->evenement[i].valeur == valeur)
+              sf->evenements[i].occurrence++;
+        }
+    }
 
 
+      incremente_et_ordonne(sf, position);
+      return valeur;
 
 
-
-
-
-
-
-
-
-
-
-
-
+      */
 
 
 return 0 ; /* pour enlever un warning du compilateur */

@@ -124,8 +124,8 @@ struct bitstream *open_bitstream(const char *fichier, const char* mode)
 
  void close_bitstream(struct bitstream *b)
  {
-     int closeSignal;
- 	if (b->fichier != NULL){
+   int closeSignal;
+ 	 if (b->fichier != NULL){
          flush_bitstream(b);
  		closeSignal=fclose(b->fichier);
      }

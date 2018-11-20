@@ -10,16 +10,15 @@
 Matrice * allocation_matrice_float(int height, int width)
 {
 
+	Matrice* max;
+	max->width = width;
+	max->height = height;
+	max->t = (float **)malloc(width * sizeof(float *));
+	for (int i=0; i<height; i++)
+         max->t[i] = (float *)malloc(height * sizeof(float));
 
 
-
-
-
-
-
-
-
-return 0 ; /* pour enlever un warning du compilateur */
+				 return max ; /* pour enlever un warning du compilateur */
 }
 
 /*
@@ -28,18 +27,15 @@ return 0 ; /* pour enlever un warning du compilateur */
 
 void liberation_matrice_float(Matrice *m)
 {
-
-
-
-
-
-
+	for (int i=0; i< m->height; ++i)
+  		free(m->t[i]);
+			free(m->t);
 }
 
 
 /*
  * Produit matriciel de matrices carrées (le résultat est déjà alloué).
- *             resultat = a * b 
+ *             resultat = a * b
  */
 
 void produit_matrices_float(const Matrice *a, const Matrice *b,
@@ -113,7 +109,7 @@ void transposition_matrice(const Matrice *a, Matrice *resultat)
 void affiche_matrice(const Matrice *a, FILE *f)
  {
    int i, j ;
-   
+
    for(j=0;j<a->height;j++)
      {
        for(i=0;i<a->width;i++)
@@ -163,4 +159,3 @@ void affiche_matrice_image(const Matrice *m)
   pclose(f) ;
   liberation_image(image) ;
  }
-
