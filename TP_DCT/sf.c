@@ -44,6 +44,7 @@ struct shannon_fano* open_shannon_fano()
  */
 void close_shannon_fano(struct shannon_fano *sf)
 {
+    fprintf( stderr, "Close roi ! --- \n");
     free(sf);
 }
 
@@ -132,20 +133,23 @@ static void encode_position(struct bitstream *bs,struct shannon_fano *sf,
       int pos = trouve_separation(sf, pos_min, pos_max);
       if(pos == -1){
           put_bit(bs, Faux);
-
+          fprintf( stderr, "-1");
           return;
         }
       if(position > pos){
         pos_min = pos + 1;
         put_bit(bs, Vrai);
+        fprintf( stderr, "1");
 
       }
       else{
         pos_max = pos;
         put_bit(bs, Faux);
+        fprintf( stderr, "0");
 
       }
     }
+    fprintf( stderr, "\n");
 }
 
 /*
@@ -162,12 +166,16 @@ static void incremente_et_ordonne(struct shannon_fano *sf, int position)
 
       sf->evenements[position].nb_occurrences++;
 
-      if(position - 1 >= 0)
-      if(sf->evenements[position].nb_occurrences > sf->evenements[position-1].nb_occurrences){
-              struct evenement save = sf->evenements[position];
-              sf->evenements[position] = sf->evenements[position-1];
-              sf->evenements[position - 1] = save;
-      }
+      for(int i=0; i<position; i++)
+      {
+        if(sf->evenements[position].nb_occurrences > sf->evenements[i].nb_occurrences)
+            {
+                struct evenement save = sf->evenements[position];
+                sf->evenements[position] = sf->evenements[i];
+                sf->evenements[i] = save;
+                break;
+            }
+       }
 }
 
 /*
@@ -180,6 +188,8 @@ void put_entier_shannon_fano(struct bitstream *bs
 			     ,struct shannon_fano *sf, int evenement)
 {
     int position = trouve_position(sf,evenement);
+    fprintf( stderr, "So bo vao: %d\n",evenement);
+    fprintf( stderr, "Trouve: %d\n",position);
     encode_position(bs,sf,position);
 
     if (sf->evenements[position].valeur == VALEUR_ESCAPE){
@@ -198,35 +208,21 @@ void put_entier_shannon_fano(struct bitstream *bs
 static int decode_position(struct bitstream *bs,struct shannon_fano *sf)
 {
 
-/*  while(pos_min != pos_max)
+  int pos_min = 0;
+  int pos_max = sf->nb_evenements-1;
+    while(pos_min != pos_max)
   {
     Booleen bit = get_bit(bs);
     int pos = trouve_separation(sf, pos_min, pos_max);
-    if(pos == -1){
-        put_bit(bs, Faux);
-        fprintf( stderr, "0");
-        return;
-      }
+
     if(bit){
       pos_min = pos + 1;
     }
     else{
       pos_max = pos;
     }
-
-    if(pos_min == pos_max)
-    {
-      // escape
-      // return so la
-    }
-    else
-    {
-        return sf->evenements[pos_min];
-    }
-  } */
-
-
-  return 0 ; /* pour enlever un warning du compilateur */
+  }
+  return pos_min;
 }
 
 /*
@@ -237,32 +233,43 @@ static int decode_position(struct bitstream *bs,struct shannon_fano *sf)
  */
 int get_entier_shannon_fano(struct bitstream *bs, struct shannon_fano *sf)
 {
-  /*  int valeur = -1;
+    fprintf( stderr, "====Lay so====\n");
+    int valeur = -1;
+    int pos = -1;
     if(sf->nb_evenements == 1){
-        int valeur = get_bits(bs,sizeof(int)*8);
+        valeur = get_bits(bs,sizeof(int)*8);
         sf->nb_evenements++;
-        sf->evenements[1].occurrence = 1;
+        sf->evenements[0].nb_occurrences++;
+        sf->evenements[1].nb_occurrences = 1;
         sf->evenements[1].valeur = valeur;
+        fprintf( stderr, "lay duoc so:%d\n",valeur);
         return valeur;
       }
-    else{
-        valeur = decode_position(bs,sf);
-        for(int i=0; i<sf->evenement; i++)
-        {
-          if(sf->evenement[i].valeur == valeur)
-              sf->evenements[i].occurrence++;
-        }
-    }
+    else
+    {
+
+        pos = decode_position(bs,sf);
+
+          if(sf->evenements[pos].valeur == VALEUR_ESCAPE)
+            {
+              valeur = get_bits(bs,sizeof(int)*8);
+              sf->evenements[sf->nb_evenements].valeur = valeur;
+              sf->evenements[sf->nb_evenements].nb_occurrences = 1;
+              sf->nb_evenements++;
+            }
+            else
+            {
+                fprintf( stderr, "Wrong case \n");
+                valeur = sf->evenements[pos].valeur;
+            }
+            incremente_et_ordonne(sf, pos);
+      }
 
 
-      incremente_et_ordonne(sf, position);
+
+      fprintf( stderr, "lay duoc so:%d\n",valeur);
       return valeur;
 
-
-      */
-
-
-return 0 ; /* pour enlever un warning du compilateur */
 }
 
 /*
