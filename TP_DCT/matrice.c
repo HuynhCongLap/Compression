@@ -10,15 +10,16 @@
 Matrice * allocation_matrice_float(int height, int width)
 {
 
-	Matrice* max;
-	max->width = width;
-	max->height = height;
-	max->t = (float **)malloc(width * sizeof(float *));
-	for (int i=0; i<height; i++)
-         max->t[i] = (float *)malloc(height * sizeof(float));
+	Matrice* matrice;
+	ALLOUER(matrice, 1) ;
+	matrice->width = width;
+	matrice->height = height;
+	ALLOUER(matrice->t, width) ;
 
+	for (int i=0; i<width; i++)
+				 ALLOUER(matrice->t[i], height) ;
 
-				 return max ; /* pour enlever un warning du compilateur */
+	return matrice ;
 }
 
 /*
@@ -27,9 +28,11 @@ Matrice * allocation_matrice_float(int height, int width)
 
 void liberation_matrice_float(Matrice *m)
 {
-	for (int i=0; i< m->height; ++i)
+	for (int i=0; i< m->width; i++)
   		free(m->t[i]);
+			
 			free(m->t);
+			free(m);
 }
 
 

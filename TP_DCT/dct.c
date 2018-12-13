@@ -20,12 +20,11 @@
 void coef_dct(Matrice *table)
 {
 
-
-
-
-
-
-
+	//	for(int i=0; i<table->width; i++)
+		//	for(int j=0; j<table->height; j++)
+	//		{
+			//	table->t[j][i] =
+		//	}
 
 }
 

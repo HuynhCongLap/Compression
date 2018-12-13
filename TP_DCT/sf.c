@@ -44,7 +44,7 @@ struct shannon_fano* open_shannon_fano()
  */
 void close_shannon_fano(struct shannon_fano *sf)
 {
-    fprintf( stderr, "Close roi ! --- \n");
+    //fprintf( stderr, "Close roi ! --- \n");
     free(sf);
 }
 
@@ -133,23 +133,23 @@ static void encode_position(struct bitstream *bs,struct shannon_fano *sf,
       int pos = trouve_separation(sf, pos_min, pos_max);
       if(pos == -1){
           put_bit(bs, Faux);
-          fprintf( stderr, "-1");
+          //fprintf( stderr, "-1");
           return;
         }
       if(position > pos){
         pos_min = pos + 1;
         put_bit(bs, Vrai);
-        fprintf( stderr, "1");
+        //fprintf( stderr, "1");
 
       }
       else{
         pos_max = pos;
         put_bit(bs, Faux);
-        fprintf( stderr, "0");
+        //fprintf( stderr, "0");
 
       }
     }
-    fprintf( stderr, "\n");
+    //fprintf( stderr, "\n");
 }
 
 /*
@@ -188,8 +188,8 @@ void put_entier_shannon_fano(struct bitstream *bs
 			     ,struct shannon_fano *sf, int evenement)
 {
     int position = trouve_position(sf,evenement);
-    fprintf( stderr, "So bo vao: %d\n",evenement);
-    fprintf( stderr, "Trouve: %d\n",position);
+    //fprintf( stderr, "So bo vao: %d\n",evenement);
+    //fprintf( stderr, "Trouve: %d\n",position);
     encode_position(bs,sf,position);
 
     if (sf->evenements[position].valeur == VALEUR_ESCAPE){
@@ -233,7 +233,7 @@ static int decode_position(struct bitstream *bs,struct shannon_fano *sf)
  */
 int get_entier_shannon_fano(struct bitstream *bs, struct shannon_fano *sf)
 {
-    fprintf( stderr, "====Lay so====\n");
+    //fprintf( stderr, "====Lay so====\n");
     int valeur = -1;
     int pos = -1;
     if(sf->nb_evenements == 1){
@@ -242,7 +242,7 @@ int get_entier_shannon_fano(struct bitstream *bs, struct shannon_fano *sf)
         sf->evenements[0].nb_occurrences++;
         sf->evenements[1].nb_occurrences = 1;
         sf->evenements[1].valeur = valeur;
-        fprintf( stderr, "lay duoc so:%d\n",valeur);
+        //fprintf( stderr, "lay duoc so:%d\n",valeur);
         return valeur;
       }
     else
@@ -259,7 +259,7 @@ int get_entier_shannon_fano(struct bitstream *bs, struct shannon_fano *sf)
             }
             else
             {
-                fprintf( stderr, "Wrong case \n");
+                //fprintf( stderr, "Wrong case \n");
                 valeur = sf->evenements[pos].valeur;
             }
             incremente_et_ordonne(sf, pos);
@@ -267,7 +267,7 @@ int get_entier_shannon_fano(struct bitstream *bs, struct shannon_fano *sf)
 
 
 
-      fprintf( stderr, "lay duoc so:%d\n",valeur);
+      //fprintf( stderr, "lay duoc so:%d\n",valeur);
       return valeur;
 
 }
