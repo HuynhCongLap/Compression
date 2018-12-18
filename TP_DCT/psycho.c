@@ -6,7 +6,7 @@
  *      A1 et A2 leurs amplitudes respectives.
  * La fréquence du son est l'indice dans le tableau "dct".
  *
- * 
+ *
  * Si   C * abs(A1)   <   abs( A2 / (F2 - F1) )
  *   Alors Annuler A1
  *
@@ -28,20 +28,12 @@
 
 void psycho(int nbe, float *dct, float c)
 {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  for(int i=1; i<nbe; i++)
+  {
+    for(int j=1; j<nbe; j++)
+    {
+      if( (i != j) && ABS(dct[i]) < ABS(dct[j] / (j-i)) )
+              dct[i] = 0.0;
+    }
+  }
 }
-

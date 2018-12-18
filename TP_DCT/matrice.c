@@ -10,7 +10,7 @@
 Matrice * allocation_matrice_float(int height, int width)
 {
 
-	Matrice* matrice;
+	Matrice* matrice = NULL;
 	ALLOUER(matrice, 1) ;
 	matrice->width = width;
 	matrice->height = height;
@@ -30,7 +30,7 @@ void liberation_matrice_float(Matrice *m)
 {
 	for (int i=0; i< m->width; i++)
   		free(m->t[i]);
-			
+
 			free(m->t);
 			free(m);
 }
