@@ -45,34 +45,36 @@ void compresse(struct intstream *entier, struct intstream *entier_signe
 	       , int nbe, const float *dct)
 {
 
+ 	 int count = 0 ;
+	 for(int i=0; i<nbe; i++)
+	 {
+		 int n = round(dct[i]);
+		 if(n != 0.0f)
+		 {
+			 if(count != 0)
+			 {
+				 put_entier_intstream(entier,count);
+				 put_entier_intstream(entier_signe,n);
+				 count = 0;
+			 }
+			 else
+			 {
+			 		put_entier_intstream(entier,0);
+			 		put_entier_intstream(entier_signe,n);
+		 	  }
+		 }
+		 else
+			 count++;
+
+
+	 }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	 if(count != 0)
+	 {
+		 put_entier_intstream(entier,count);
+	 }
 }
 
 /*
@@ -83,20 +85,24 @@ void decompresse(struct intstream *entier, struct intstream *entier_signe
 		 , int nbe, float *dct)
 {
 
+		int i = 0;
+		while(i < nbe)
+		{
+			int nb_zeros = get_entier_intstream(entier);
+			while(nb_zeros != 0)
+			{
+				dct[i] = 0;
+				nb_zeros--;
+				i++;
+			}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+			if(i >= nbe)
+			{
+				break;
+			}
+			int valeur = get_entier_intstream(entier_signe);
+			dct[i] = valeur;
+			i++;
+		}
 
 }

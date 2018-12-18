@@ -9,11 +9,14 @@
 
 void lire_ligne(FILE *f, char *ligne)
 {
+  char* buff;
+  size_t len = 0;
+  getline(&buff, &len, f);
 
-
-
-
-
+  while(buff[0] == '#')
+    getline(&buff, &len, f);
+  strcpy(ligne,buff);
+  free(buff);
 
 }
 
@@ -23,17 +26,18 @@ void lire_ligne(FILE *f, char *ligne)
 
 struct image* allocation_image(int hauteur, int largeur)
 {
+  struct image* img = NULL;
+  ALLOUER(img, 1) ;
 
+  img->largeur = largeur;
+  img->hauteur = hauteur;
+  ALLOUER(img->pixels, largeur) ;
 
+  for (int i=0; i<largeur; i++)
+         ALLOUER(img->pixels[i],  hauteur) ;
 
+  return img ;
 
-
-
-
-
-
-
-return 0 ; /* pour enlever un warning du compilateur */
 }
 
 /*
@@ -42,12 +46,11 @@ return 0 ; /* pour enlever un warning du compilateur */
 
 void liberation_image(struct image* image)
 {
+  for (int i=0; i< image->largeur; i++)
+  		free(image->pixels[i]);
 
-
-
-
-
-
+			free(image->pixels);
+			free(image);
 }
 
 /*

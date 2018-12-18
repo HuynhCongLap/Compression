@@ -21,7 +21,7 @@ void lire_ligne_tst()
   lire_ligne(f, ligne) ;
   if ( strcmp(ligne, "a b c\n") )
     {
-      eprintf("Pas bon\n") ;
+      eprintf("Pas bon \n") ;
       return ;
     }
   lire_ligne(f, ligne) ;
