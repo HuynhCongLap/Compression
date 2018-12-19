@@ -13,8 +13,10 @@ void lire_ligne(FILE *f, char *ligne)
   size_t len = 0;
   getline(&buff, &len, f);
 
-  while(buff[0] == '#')
+  while(buff[0] == '#'){
     getline(&buff, &len, f);
+  }
+
   strcpy(ligne,buff);
   free(buff);
 
@@ -31,10 +33,10 @@ struct image* allocation_image(int hauteur, int largeur)
 
   img->largeur = largeur;
   img->hauteur = hauteur;
-  ALLOUER(img->pixels, largeur) ;
+  ALLOUER(img->pixels, hauteur) ;
 
-  for (int i=0; i<largeur; i++)
-         ALLOUER(img->pixels[i],  hauteur) ;
+  for (int i=0; i<hauteur; i++)
+         ALLOUER(img->pixels[i],  largeur) ;
 
   return img ;
 
@@ -62,44 +64,16 @@ void liberation_image(struct image* image)
 struct image* lecture_image(FILE *f)
 {
 
+  int largeur,hauteur;
+  fscanf(f,"P5\n%d %d\n255\n",&largeur,&hauteur);
+  struct image * img = allocation_image(hauteur,largeur);
+
+    for(int i=0; i<img->hauteur;i++)
+    for(int j=0; j<img->largeur; j++)
+      img->pixels[i][j] = fgetc(f);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-return 0 ; /* pour enlever un warning du compilateur */
+  return img ; /* pour enlever un warning du compilateur */
 }
 
 /*
@@ -109,13 +83,11 @@ return 0 ; /* pour enlever un warning du compilateur */
 void ecriture_image(FILE *f, const struct image *image)
 {
 
+  fprintf (f, "P5\n%d %d\n255\n",image->largeur,image->hauteur);
 
-
-
-
-
-
-
+  for(int i=0; i<image->hauteur;i++)
+  for(int j=0; j<image->largeur; j++)
+     putc(image->pixels[i][j],f);
 
 
 }
