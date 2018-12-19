@@ -96,23 +96,57 @@ void quantification(int nbe, int qualite, Matrice *extrait, int inverse)
  */
 void zigzag(int nbe, int *y, int *x)
 {
+  int iy = *y;
+	int ix = *x;
+	int n = nbe-1;
+	fprintf(stderr, "nbe: %d\n",nbe );
 
+	if(ix == n && iy==n)
+			return;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 	if(iy == 0 || iy== n)
+	{
+		if(ix%2)
+		{
+			ix--;
+			iy++;
+		}
+		else
+		{
+			ix++;
+		}
+	}
+	else
+	{
+		if(ix==0 || ix==n)
+		{
+			if(iy%2)
+			{
+				iy++;
+			}
+			else
+			{
+				ix++;
+				iy--;
+			}
+		}
+		else
+		{
+			if((ix+iy)%2)
+			{
+				iy++;
+				ix--;
+			}
+			else
+			{
+				iy--;
+				ix++;
+			}
+		}
+	}
+	fprintf(stderr, "x=%d y=%d\n",ix,iy );
+	*x = ix;
+	*y = iy;
 
 }
 /*
