@@ -14,23 +14,24 @@
 void dct_image(int inverse, int nbe, Matrice *image)
 {
 
+	if(nbe != 0)
+	{
+		Matrice* coef = allocation_matrice_float(nbe,nbe);
+		coef_dct(coef);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		if(inverse == 0)
+		{
+			produit_matrice_vecteur(coef,entree,sortie);
+		}
+		else
+		{
+				Matrice* inverse_coef = allocation_matrice_float(nbe,nbe);
+				transposition_matrice(coef,inverse_coef);
+				produit_matrice_vecteur(inverse_coef,entree,sortie);
+				liberation_matrice_float(inverse_coef);
+		}
+				liberation_matrice_float(coef);
+	}
 
 
 
@@ -70,10 +71,10 @@ void quantification(int nbe, int qualite, Matrice *extrait, int inverse)
  * | / | / | / | | |     | / | ----- |
  * |   |/  |/  |/  |     |   |   |   |
  * +---/---/---/---+     +---+---+---+
- * |  /|  /|  /|   |    
- * | /---/ | /---- |    
- * |   |   |   |   |    
- * +---+---+---+---+    
+ * |  /|  /|  /|   |
+ * | /---/ | /---- |
+ * |   |   |   |   |
+ * +---+---+---+---+
  */
 void zigzag(int nbe, int *y, int *x)
 {
