@@ -17,20 +17,33 @@ void dct_image(int inverse, int nbe, Matrice *image)
 	if(nbe != 0)
 	{
 		Matrice* coef = allocation_matrice_float(nbe,nbe);
+		Matrice* coef_t  = allocation_matrice_float(nbe,nbe);
+		Matrice* result = allocation_matrice_float(nbe,nbe);
+		Matrice* result1 = allocation_matrice_float(nbe,nbe);
+
 		coef_dct(coef);
+		transposition_matrice(coef,coef_t);
 
 		if(inverse == 0)
 		{
-			produit_matrice_vecteur(coef,entree,sortie);
+
+			produit_matrices_float(coef,image,result1);
+			produit_matrices_float(result1,coef_t,result);
+			for(int i=0; i <nbe; i++)
+			for(int j=0; j <nbe; j++)
+							image->t[j][i] = result->t[j][i];
 		}
 		else
 		{
-				Matrice* inverse_coef = allocation_matrice_float(nbe,nbe);
-				transposition_matrice(coef,inverse_coef);
-				produit_matrice_vecteur(inverse_coef,entree,sortie);
-				liberation_matrice_float(inverse_coef);
+			produit_matrices_float(coef_t,image,result1);
+			produit_matrices_float(result1,coef,result);
+			for(int i=0; i <nbe; i++)
+			for(int j=0; j <nbe; j++)
+							image->t[j][i] = result->t[j][i];
 		}
 				liberation_matrice_float(coef);
+				liberation_matrice_float(coef_t);
+				liberation_matrice_float(result);
 	}
 
 
@@ -45,13 +58,18 @@ void dct_image(int inverse, int nbe, Matrice *image)
 void quantification(int nbe, int qualite, Matrice *extrait, int inverse)
 {
 
-
-
-
-
-
-
-
+	if(inverse == 0)
+	{
+		for(int i=0; i <nbe; i++)
+		for(int j=0; j <nbe; j++)
+		    extrait->t[j][i] = extrait->t[j][i]/(1+(i+j+1)*qualite);
+	}
+	else
+	{
+		for(int i=0; i <nbe; i++)
+		for(int j=0; j <nbe; j++)
+		    extrait->t[j][i] = extrait->t[j][i]*(1+(i+j+1)*qualite);
+	}
 }
 /*
  * ZIGZAG.

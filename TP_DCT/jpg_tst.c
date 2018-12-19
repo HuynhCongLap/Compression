@@ -6,15 +6,15 @@ void dct_image_tst()
 {
   int i, j ;
 
-  static float im1[3] = { 1, 2, 3 } ; 
-  static float im2[3] = { 4, 5, 6 } ; 
+  static float im1[3] = { 1, 2, 3 } ;
+  static float im2[3] = { 4, 5, 6 } ;
   static float im3[3] = { 7, 8, 9 } ;
   static float *imt[] = { im1, im2, im3 } ;
   static Matrice im = {3, 3, imt} ;
 
-  static float jm1[3] = { 1, 2, 3 } ; 
-  static float jm2[3] = { 4, 5, 6 } ; 
-  static float jm3[3] = { 7, 8, 9 } ; 
+  static float jm1[3] = { 1, 2, 3 } ;
+  static float jm2[3] = { 4, 5, 6 } ;
+  static float jm3[3] = { 7, 8, 9 } ;
   static float *jmt[] = { jm1, jm2, jm3 } ;
   static Matrice jm = {3, 3, jmt} ;
 
@@ -30,7 +30,7 @@ void dct_image_tst()
     for(i=0; i<3; i++)
       if ( fabs(im.t[j][i] - ir.t[j][i]) > 1e-4 )
 	{
-	  eprintf("[%d][%d] = %g au lieu de %g\n", j, i, im.t[j][i], ir.t[j][i]) ;
+	  eprintf("[%d][%d] = %g haha au lieu de %g\n", j, i, im.t[j][i], ir.t[j][i]) ;
 	}
 
   dct_image(1, 3, &ir) ;
@@ -38,7 +38,7 @@ void dct_image_tst()
     for(i=0; i<3; i++)
       if ( fabs(jm.t[j][i] - ir.t[j][i]) > 1e-4 )
 	{
-	  eprintf("*[%d][%d] = %g au lieu de %g\n", j, i, ir.t[j][i], jm.t[j][i]) ;
+	  eprintf("*[%d][%d] = %g hehe au lieu de %g\n", j, i, ir.t[j][i], jm.t[j][i]) ;
 	}
 }
 
@@ -46,15 +46,15 @@ void quantification_tst()
 {
   int i, j ;
 
-  static float im1[3] = { 1, 2, 3 } ; 
-  static float im2[3] = { 4, 5, 6 } ; 
-  static float im3[3] = { 7, 8, 9 } ; 
+  static float im1[3] = { 1, 2, 3 } ;
+  static float im2[3] = { 4, 5, 6 } ;
+  static float im3[3] = { 7, 8, 9 } ;
   static float *imt[] = { im1, im2, im3 } ;
   static Matrice im = {3, 3, imt} ;
 
-  static float ir1[3] = { 0.5, 0.666667, 0.75 } ; 
-  static float ir2[3] = { 1.33333, 1.25, 1.2 } ; 
-  static float ir3[3] = { 1.75 ,1.6 ,  1.5 } ; 
+  static float ir1[3] = { 0.5, 0.666667, 0.75 } ;
+  static float ir2[3] = { 1.33333, 1.25, 1.2 } ;
+  static float ir3[3] = { 1.75 ,1.6 ,  1.5 } ;
   static float *irt[] = { ir1, ir2, ir3 } ;
   static Matrice ir = {3, 3, irt} ;
 
@@ -87,55 +87,55 @@ void zigzag_tst()
   int i, j, old_i, old_j ;
   i = 0 ;
   j = 0 ;
-  ZZ(3, 0,1) ; 
-  ZZ(3, 1,0) ; 
-  ZZ(3, 2,0) ; 
-  ZZ(3, 1,1) ; 
-  ZZ(3, 0,2) ; 
-  ZZ(3, 1,2) ; 
-  ZZ(3, 2,1) ; 
-  ZZ(3, 2,2) ; 
+  ZZ(3, 0,1) ;
+  ZZ(3, 1,0) ;
+  ZZ(3, 2,0) ;
+  ZZ(3, 1,1) ;
+  ZZ(3, 0,2) ;
+  ZZ(3, 1,2) ;
+  ZZ(3, 2,1) ;
+  ZZ(3, 2,2) ;
   i = 0 ;
   j = 0 ;
-  ZZ(4, 0,1) ; 
-  ZZ(4, 1,0) ; 
-  ZZ(4, 2,0) ; 
-  ZZ(4, 1,1) ; 
-  ZZ(4, 0,2) ; 
-  ZZ(4, 0,3) ; 
-  ZZ(4, 1,2) ; 
-  ZZ(4, 2,1) ; 
-  ZZ(4, 3,0) ; 
-  ZZ(4, 3,1) ; 
-  ZZ(4, 2,2) ; 
-  ZZ(4, 1,3) ; 
-  ZZ(4, 2,3) ; 
-  ZZ(4, 3,2) ; 
-  ZZ(4, 3,3) ; 
+  ZZ(4, 0,1) ;
+  ZZ(4, 1,0) ;
+  ZZ(4, 2,0) ;
+  ZZ(4, 1,1) ;
+  ZZ(4, 0,2) ;
+  ZZ(4, 0,3) ;
+  ZZ(4, 1,2) ;
+  ZZ(4, 2,1) ;
+  ZZ(4, 3,0) ;
+  ZZ(4, 3,1) ;
+  ZZ(4, 2,2) ;
+  ZZ(4, 1,3) ;
+  ZZ(4, 2,3) ;
+  ZZ(4, 3,2) ;
+  ZZ(4, 3,3) ;
   i = 0 ;
   j = 0 ;
-  ZZ(5, 0,1) ; 
-  ZZ(5, 1,0) ; 
-  ZZ(5, 2,0) ; 
-  ZZ(5, 1,1) ; 
-  ZZ(5, 0,2) ; 
-  ZZ(5, 0,3) ; 
-  ZZ(5, 1,2) ; 
-  ZZ(5, 2,1) ; 
-  ZZ(5, 3,0) ; 
-  ZZ(5, 4,0) ; 
-  ZZ(5, 3,1) ; 
-  ZZ(5, 2,2) ; 
-  ZZ(5, 1,3) ; 
-  ZZ(5, 0,4) ; 
-  ZZ(5, 1,4) ; 
-  ZZ(5, 2,3) ; 
-  ZZ(5, 3,2) ; 
-  ZZ(5, 4,1) ; 
-  ZZ(5, 4,2) ; 
-  ZZ(5, 3,3) ; 
-  ZZ(5, 2,4) ; 
-  ZZ(5, 3,4) ; 
-  ZZ(5, 4,3) ; 
-  ZZ(5, 4,4) ; 
+  ZZ(5, 0,1) ;
+  ZZ(5, 1,0) ;
+  ZZ(5, 2,0) ;
+  ZZ(5, 1,1) ;
+  ZZ(5, 0,2) ;
+  ZZ(5, 0,3) ;
+  ZZ(5, 1,2) ;
+  ZZ(5, 2,1) ;
+  ZZ(5, 3,0) ;
+  ZZ(5, 4,0) ;
+  ZZ(5, 3,1) ;
+  ZZ(5, 2,2) ;
+  ZZ(5, 1,3) ;
+  ZZ(5, 0,4) ;
+  ZZ(5, 1,4) ;
+  ZZ(5, 2,3) ;
+  ZZ(5, 3,2) ;
+  ZZ(5, 4,1) ;
+  ZZ(5, 4,2) ;
+  ZZ(5, 3,3) ;
+  ZZ(5, 2,4) ;
+  ZZ(5, 3,4) ;
+  ZZ(5, 4,3) ;
+  ZZ(5, 4,4) ;
 }
