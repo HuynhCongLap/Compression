@@ -24,13 +24,18 @@
 void ondelette_1d(const float *entree, float *sortie, int nbe)
 {
 
+  int j=0;
+  for(int i=0; i<(nbe/2); i++)
+  {
+    sortie[i] = (entree[j] + entree[j+1])/2.0;
+    sortie[(nbe/2)+(nbe%2)+i] = (entree[j] - entree[j+1])/2.0;
+    j+=2;
+  }
 
-
-
-
-
-
-
+  if(nbe%2)
+  {
+    sortie[nbe/2] = entree[nbe-1];
+  }
 
 }
 
@@ -51,7 +56,7 @@ void ondelette_1d(const float *entree, float *sortie, int nbe)
  *    On ne travaille donc que sur le haut gauche de l'image de taille 2x3
  *
  * On recommence :
- *    2x3 horizontal   
+ *    2x3 horizontal
  *    transposee => 3x2
  *    3x2 horizontal
  *    transposee => 2x3
@@ -81,40 +86,45 @@ void ondelette_1d(const float *entree, float *sortie, int nbe)
  * F1H  Indique que c'est une fréquence horizontale
  * F1V  Indique que c'est une fréquence verticale
  * F1HV Indique que c'est une fréquence calculée dans les 2 directions
- * 
+ *
  */
 
 void ondelette_2d(Matrice *image)
 {
+  int h = image->height;
+  int w = image->width;
+
+  while(h*w != 1)
+  {
+    Matrice *inter_1 = allocation_matrice_float(h,w);
+    Matrice *inter_2 = allocation_matrice_float(w,h);
+    Matrice *inter_3 = allocation_matrice_float(w,h);
+    Matrice *inter_4 = allocation_matrice_float(h,w);
+
+    for(int i=0; i<h; i++)
+    ondelette_1d(image->t[i], inter_1->t[i], w);
+    transposition_matrice_partielle(inter_1,inter_2,h,w);
+
+    for(int i=0; i<w; i++)
+    ondelette_1d(inter_2->t[i], inter_3->t[i], h);
+    transposition_matrice_partielle(inter_3,inter_4,w,h);
+
+    for(int i=0; i<h; i++)
+    for(int j=0; j<w; j++)
+      image->t[i][j] = inter_4->t[i][j];
 
 
+    if(w != 1)
+        w = round(w/2.f);
 
+    if(h != 1)
+        h = round(h/2.f);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    liberation_matrice_float(inter_1);
+    liberation_matrice_float(inter_2);
+    liberation_matrice_float(inter_3);
+    liberation_matrice_float(inter_4);
+  }
 }
 
 /*
@@ -128,20 +138,9 @@ void ondelette_2d(Matrice *image)
 void quantif_ondelette(Matrice *image, float qualite)
 {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    for(int i=0; i <image->height; i++)
+    for(int j=0; j <image->width; j++)
+      image->t[i][j] = image->t[i][j]/(1+(i+j+1)*qualite/100);
 
 }
 
@@ -196,7 +195,7 @@ void codage_ondelette(Matrice *image, FILE *f)
   close_bitstream(bs) ;
   free(t) ;
  }
-  
+
 
 
 /*
@@ -208,13 +207,17 @@ void codage_ondelette(Matrice *image, FILE *f)
 void ondelette_1d_inverse(const float *entree, float *sortie, int nbe)
 {
 
-
-
-
-
-
-
-
+  int j=0;
+  for(int i=0; i<(nbe/2); i++)
+  {
+    sortie[j] = entree[i] + entree[(nbe/2)+(nbe%2)+i] ;
+    sortie[j+1]= entree[i] - entree[(nbe/2)+(nbe%2)+i];
+    j+=2;
+  }
+  if(nbe%2)
+  {
+    sortie[nbe-1]= entree[nbe/2];
+  }
 
 }
 
@@ -222,59 +225,73 @@ void ondelette_1d_inverse(const float *entree, float *sortie, int nbe)
 void ondelette_2d_inverse(Matrice *image)
 {
 
+  int h = image->height;
+  int w = image->width;
+
+  int count_w = 0;
+  int count_h = 0;
+  int count =0;
+  while(h*w != 1)
+  {
+    count++;
+    if(w != 1){
+      count_w++;
+      w=round(w/2.0);
+    }
+
+    if(h != 1){
+      count_h++;
+      h=round(h/2.0);
+    }
+  }
+  h = image->height;
+  w = image->width;
+
+    while(count>0){
+      int ww=w;
+      int hh =h;
+      for(int i=0; i<count-1 ; i++)
+        hh =  round(hh/2.f);
+      for(int i=0; i<count-1 ; i++)
+        ww =  round(ww/2.f);
+      //  count_h--; count_w--;
+
+    //fprintf(stderr, "hh:%d ww:%d\n",hh,ww);
+    //fprintf(stderr, "Hello\n");
+    Matrice *inter_1 = allocation_matrice_float(hh,ww);
+    Matrice *inter_2 = allocation_matrice_float(ww,hh);
+    Matrice *inter_3 = allocation_matrice_float(ww,hh);
+    Matrice *inter_4 = allocation_matrice_float(hh,ww);
+
+    for(int i=0; i<hh; i++)
+    ondelette_1d_inverse(image->t[i], inter_1->t[i], ww);
+    transposition_matrice_partielle(inter_1,inter_2,hh,ww);
+
+    for(int i=0; i<ww; i++)
+    ondelette_1d_inverse(inter_2->t[i], inter_3->t[i], hh);
+    transposition_matrice_partielle(inter_3,inter_4,ww,hh);
+
+    for(int i=0; i<hh; i++)
+    for(int j=0; j<ww; j++)
+      image->t[i][j] = inter_4->t[i][j];
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    count--;
+    liberation_matrice_float(inter_1);
+    liberation_matrice_float(inter_2);
+    liberation_matrice_float(inter_3);
+    liberation_matrice_float(inter_4);
+  }
 
 }
 
 
 void dequantif_ondelette(Matrice *image, float qualite)
 {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  for(int i=0; i <image->height; i++)
+  for(int j=0; j <image->width; j++)
+      image->t[i][j] = image->t[i][j]*(1+(i+j+1)*qualite/100);
 }
 
 void decodage_ondelette(Matrice *image, FILE *f)
@@ -319,7 +336,7 @@ void decodage_ondelette(Matrice *image, FILE *f)
 
   free(t) ;
  }
-  
+
 /*
  * Programme de test.
  * La ligne suivante compile, compresse et décompresse l'image
@@ -387,5 +404,3 @@ void ondelette_decode_image()
   image = creation_image_a_partir_de_matrice_float(im) ;
   ecriture_image(stdout, image) ;
  }
-
-

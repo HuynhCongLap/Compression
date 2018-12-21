@@ -85,7 +85,7 @@ void ondelette_1d_inverse_tst()
        }
        , {{ 3.75, -1.25},
 	  { -2.25, 0.75}
-       } 
+       }
       },
       {3, 2
        , {{ 1, 2},
@@ -95,7 +95,7 @@ void ondelette_1d_inverse_tst()
        , {{ 13.875, -1.25},
 	  { -10.125, -8},
 	  { -2.25, 0.75}
-       } 
+       }
       },
       {3, 3
        , {{ 1, 2, 4},
@@ -117,13 +117,13 @@ void ondelette_1d_inverse_tst()
 	  {-28.125,     -20},
 	  {-2.25,    0.75},
 	  {-36,      12}
-       } 
+       }
       },
       {3, 4
        , {{ 1, 2, 4,512},
 	  { 8,16,32,1024},
 	  {64,128,256,2048},
-	  
+
        }
        , {{411.937500, -360.562500,  -2.250000, -375.000000},
 	  {-212.062500, 167.437500, -32.000000, -896.000000},
@@ -180,7 +180,7 @@ void ondelette_2d_tst()
 		    eprintf(" %10f", t2[i].in[y][x]) ;
 		  eprintf("\n") ;
 		}
-	      
+
 	      eprintf("\ndonne :\n") ;
 	      for(y=0; y<t2[i].hau; y++)
 		{
@@ -188,7 +188,7 @@ void ondelette_2d_tst()
 		    eprintf(" %10f", tf->t[y][x]) ;
 		  eprintf("\n") ;
 		}
-	      
+
 	      eprintf("\nau lieu de :\n") ;
 	      for(y=0; y<t2[i].hau; y++)
 		{
@@ -201,14 +201,14 @@ void ondelette_2d_tst()
       liberation_matrice_float(tf) ;
 
       /* Transpose */
-	  
+
       for(y=0; y<NBM; y++)
 	for(x=0; x<y; x++)
 	  {
 	    tmp = t2[i].in[x][y] ;
 	    t2[i].in[x][y] = t2[i].in[y][x] ;
 	    t2[i].in[y][x] = tmp ;
-	    
+
 	    tmp = t2[i].out[x][y] ;
 	    t2[i].out[x][y] = t2[i].out[y][x] ;
 	    t2[i].out[y][x] = tmp ;
@@ -216,7 +216,7 @@ void ondelette_2d_tst()
       tmp = t2[i].lar ;
       t2[i].lar = t2[i].hau ;
       t2[i].hau = tmp ;
-      
+
       transposee ^= 1 ;
 
       if ( transposee == 1 )
@@ -264,7 +264,7 @@ void ondelette_2d_inverse_tst()
 		    eprintf(" %10f", t2[i].out[y][x]) ;
 		  eprintf("\n") ;
 		}
-	      
+
 	      eprintf("\ndonne :\n") ;
 	      for(y=0; y<t2[i].hau; y++)
 		{
@@ -272,7 +272,7 @@ void ondelette_2d_inverse_tst()
 		    eprintf(" %10f", tf->t[y][x]) ;
 		  eprintf("\n") ;
 		}
-	      
+
 	      eprintf("\nau lieu de :\n") ;
 	      for(y=0; y<t2[i].hau; y++)
 		{
@@ -285,14 +285,14 @@ void ondelette_2d_inverse_tst()
       liberation_matrice_float(tf) ;
 
       /* Transpose */
-	  
+
       for(y=0; y<NBM; y++)
 	for(x=0; x<y; x++)
 	  {
 	    tmp = t2[i].in[x][y] ;
 	    t2[i].in[x][y] = t2[i].in[y][x] ;
 	    t2[i].in[y][x] = tmp ;
-	    
+
 	    tmp = t2[i].out[x][y] ;
 	    t2[i].out[x][y] = t2[i].out[y][x] ;
 	    t2[i].out[y][x] = tmp ;
@@ -300,7 +300,7 @@ void ondelette_2d_inverse_tst()
       tmp = t2[i].lar ;
       t2[i].lar = t2[i].hau ;
       t2[i].hau = tmp ;
-      
+
       transposee ^= 1 ;
 
       if ( transposee == 1 )
@@ -312,5 +312,3 @@ void ondelette_2d_inverse_tst()
     }
 
 }
-
-

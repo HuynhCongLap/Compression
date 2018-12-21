@@ -1,0 +1,72 @@
+﻿<HTML>
+<HEAD>
+<TITLE>Statistiques sur la compression ondelette</TITLE>
+</HEAD>
+<BODY>
+<H1>Statistiques sur la compression ondelette</H1>
+<P>
+Les images sur cette page sont en GIF. Comme l'image a 256 niveaux
+de gris la conversion en GIF ne réduit pas les couleurs.
+Elle est donc sans pertes.
+
+<TABLE>
+
+<TR>
+<TD><IMG SRC="xxx.orig.gif">
+<TD>
+Image originale<BR>
+DONNEES/bat710.pgm<BR>
+34305 octets
+<TR>
+<TD><IMG SRC="xxx.1.gif">
+<TD>
+export QUALITE=1<BR>
+./ondelette | ./ondeletteinv
+<BR>
+20527
+ octets
+<TR>
+<TD><IMG SRC="xxx.4.gif">
+<TD>
+export QUALITE=4<BR>
+./ondelette | ./ondeletteinv
+<BR>
+11365
+ octets
+<TR>
+<TD><IMG SRC="xxx.16.gif">
+<TD>
+export QUALITE=16<BR>
+./ondelette | ./ondeletteinv
+<BR>
+3796
+ octets
+<TR>
+<TD><IMG SRC="xxx.64.gif">
+<TD>
+export QUALITE=64<BR>
+./ondelette | ./ondeletteinv
+<BR>
+604
+ octets
+<TR>
+<TD><IMG SRC="xxx.256.gif">
+<TD>
+export QUALITE=256<BR>
+./ondelette | ./ondeletteinv
+<BR>
+87
+ octets
+<TR>
+<TD><IMG SRC="xxx.1024.gif">
+<TD>
+export QUALITE=1024<BR>
+./ondelette | ./ondeletteinv
+<BR>
+38
+ octets
+
+</TABLE>
+</BODY>
+</HTML>
+

@@ -99,54 +99,47 @@ void zigzag(int nbe, int *y, int *x)
   int iy = *y;
 	int ix = *x;
 	int n = nbe-1;
-	fprintf(stderr, "nbe: %d\n",nbe );
-
-	if(ix == n && iy==n)
-			return;
-
- 	if(iy == 0 || iy== n)
-	{
-		if(ix%2)
+	int i = nbe%2;
+	if(i ==0){
+		if((iy==0 && (ix+iy)%2==0) || (iy==n && (ix+iy)%2==1)) // vertical
 		{
-			ix--;
-			iy++;
+			(*x)++; return;
 		}
-		else
+
+		if((iy==0 && (ix+iy)%2==0 && ix!=n) || (iy==n && (ix+iy)%2==1 && iy != 0)) // vertical
 		{
-			ix++;
+			(*x)++; return;
 		}
 	}
 	else
 	{
-		if(ix==0 || ix==n)
+		if((iy==0 && (ix+iy)%2==0 && ix!=n) || (iy==n && (ix+iy)%2==1 && iy != 0)) // vertical
 		{
-			if(iy%2)
-			{
-				iy++;
-			}
-			else
-			{
-				ix++;
-				iy--;
-			}
+			(*x)++; return;
 		}
-		else
+
+		if((ix==0 && (ix+iy)%2==1) || (ix==n && (ix+iy)%2==0)) // hotizontal
 		{
-			if((ix+iy)%2)
-			{
-				iy++;
-				ix--;
-			}
-			else
-			{
-				iy--;
-				ix++;
-			}
+			(*y)++; return;
 		}
 	}
-	fprintf(stderr, "x=%d y=%d\n",ix,iy );
-	*x = ix;
-	*y = iy;
+
+		if((ix==0 && (ix+iy)%2==1) || (ix==n && (ix+iy)%2==0)) // hotizontal
+		{
+			(*y)++; return;
+		}
+
+		if((ix+iy)%2 ==1)
+		{
+			(*x)--; (*y)++; return;
+		}
+
+		if((ix+iy)%2 ==0)
+		{
+			(*x)++; (*y)--; return;
+		}
+
+
 
 }
 /*
